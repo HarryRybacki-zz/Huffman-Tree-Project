@@ -1,12 +1,11 @@
 /***************************************************
-
 Project name: huffman tree
 
 Filename: h_rybacki_prj.java
 
-Student Name:
+Student Name: Harry Rybacki
 
-Date:
+Date: 29Oct2012
 
 Tasks
 
@@ -25,9 +24,6 @@ Platform: Linux
 Submission requirements: Tested on UNCG's linux server. One file h_rybacki_prj.java
 
 ***************************************************/
-/**
- * @TODO:   refactor two arraylists into one
- */
 
 import java.util.ArrayList;
 import java.util.PriorityQueue;
@@ -54,7 +50,9 @@ public class h_rybacki_prj {
             rightTree = rTree;
             parent = par;
          }
-
+        
+        // setters/getters
+        
         @Override
         public int compareTo(HuffNode rhs) {
             return weight - rhs.weight;
@@ -74,7 +72,6 @@ public class h_rybacki_prj {
         private int size = 0;
         private HuffNode root = new HuffNode();
         private PriorityQueue<HuffNode> huffQueue = new PriorityQueue();
-        int tableSize = 0;
         public ArrayList<String> pathTable = new ArrayList();
         public ArrayList<Character> valueTable = new ArrayList();
 
@@ -104,7 +101,6 @@ public class h_rybacki_prj {
 
         /**
          * creates Huffman Tree from frequencies and values
-         *
          * @param null
          */
         private void createTree() {
@@ -113,15 +109,18 @@ public class h_rybacki_prj {
                 // pop off two minimum elements in huffQueue
                 HuffNode tempL = huffQueue.poll();
                 HuffNode tempR = huffQueue.poll();
+                
                 // create root for two minimum elements and build tree
                 HuffNode parent = new HuffNode(0, tempL.weight+tempR.weight, tempL, tempR, null);
                 tempL.parent = parent;
                 tempR.parent = parent;
+                
                 // add new tree back in huffQueue
                 huffQueue.offer(parent);
                 this.size++;
             }
-            // set HuffTree root to remaning element in huffQueue
+            
+            // set HuffTree root to remaining element in huffQueue
             this.root = huffQueue.peek();
         }
 
@@ -132,25 +131,28 @@ public class h_rybacki_prj {
         private void createTable(HuffNode curr, String str) {
             // if iterator is null, return
             if (curr == null) return;
+            
             // else if leaf, display path and value
             if (curr.leftTree == null && curr.rightTree == null) {
-                //System.out.println(str +  ":" + curr.value);
                 char tempChar;
                 if (curr.value == 32)
                     tempChar = ' ';
+                
                 if (curr.value == 10)
                     tempChar = 'n';
+                
                 else 
                     tempChar = (char)curr.value;
+                // add value and path to code tables
                 this.valueTable.add(tempChar);
                 this.pathTable.add(str);
-                this.tableSize++;
             }
 
             // add 0 if before moving to left child
             str += "0";
             // recursively call in pre-order
             createTable(curr.leftTree, str);
+            
             // adjust path and add 1 before moving to right child
             str = str.substring(0, str.length()-1);
             str += "1";
@@ -166,15 +168,23 @@ public class h_rybacki_prj {
         public void getTree(HuffNode curr) {
             // if iterator is null, return
             if (curr == null) return;
+            
             // else if leaf, display level, weight, and value
             if (curr.leftTree == null && curr.rightTree == null) {
-                if (curr.value == 32)
-                    System.out.println(tacks + curr.weight + ": sp");
-                if (curr.value == 10)
-                    System.out.println(tacks + curr.weight + ": nl ");
-                else
-                    System.out.println(tacks + curr.weight + ": " + (char)curr.value);
+            	// case statements to handle displaying space and newline
+            	switch (curr.value) {
+            		case 32:
+            			System.out.println(tacks + curr.weight + ": sp");
+            			break;
+            		case 10:
+            			System.out.println(tacks + curr.weight + ": nl");
+            			break;
+            		default:
+            			System.out.println(tacks + curr.weight + ": " + (char)curr.value);
+            			break;
+            	}              
             }
+            
             // else display level and weight
             else
                 System.out.println(tacks + curr.weight);
@@ -203,15 +213,14 @@ public class h_rybacki_prj {
         public String encode(String input){
             // create empty string to hold code
             String str = "";
-            // iterate through give nstring
+            
+            // iterate through given string
             for (int x = 0; x < input.length(); x++) {
                 // iterate through code tables
                 for (int i = 0; i < valueTable.size(); i++) {
                     // if char in string matches code in table, add path to string
-                    if (valueTable.get(i) == input.charAt(x)) {
+                    if (valueTable.get(i) == input.charAt(x))
                         str += pathTable.get(i);
-                        //System.out.println(pathTable.get(i));
-                    }
                 }
             }
             return str;
@@ -231,7 +240,6 @@ public class h_rybacki_prj {
                 if (!getChar(bits.substring(0, i+1)).equals("")) {
                     decodedStr += getChar(bits.substring(0, i+1));
                     bits = bits.substring(i+1);
-                    //System.out.println("Bits is now: " + bits);
                     i = 0;
                 }
             }
@@ -244,11 +252,12 @@ public class h_rybacki_prj {
          * @return String -- character associated with bits if any
          */
         private String getChar(String bits) {
-            //System.out.println("getChar() called on: " + bits);
+        	// create string to hold potential character
             String character = "";
+            	// traverse code table to seek match
                 for (int i = 0; i < pathTable.size(); i++) {
-                    //System.out.println("Checking bits: " + bits + " against path: " + pathTable.get(i));
-                    if (pathTable.get(i).equals(bits))
+                    // add to string if match is found
+                	if (pathTable.get(i).equals(bits))
                         character = valueTable.get(i).toString();
                 }
             return character;
@@ -270,18 +279,11 @@ public class h_rybacki_prj {
             hTree.getTree(curr);
             System.out.println("");
 
-            // display code tables
-            System.out.println("Code Tables:");
-            System.out.println(hTree.pathTable.toString());
-            System.out.println(hTree.valueTable.toString());
-            System.out.println("");
-
             // encode 'tea'
-            System.out.println("Encode 'tea': " + hTree.encode("tea"));
-            System.out.println("");        
+            System.out.println("Encode 'tea': " + hTree.encode("tea") +"\n");
 
-            // decode 'tea' -- 1100, 10, 111
-            System.out.println("Decode '110010111': " + hTree.decode("110010111"));
-            System.out.println("Decode '10': " + hTree.decode("10"));
+            // decode 'tea' -- using the actual methods built in
+            System.out.println("Decode '" + hTree.encode("tea") + "': " + 
+            								hTree.decode(hTree.encode("tea")));
         }
 }
