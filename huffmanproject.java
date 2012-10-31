@@ -1,34 +1,23 @@
 /***************************************************
 Project name: huffman tree
-
 Filename: h_rybacki_prj.java
-
 Student Name: Harry Rybacki
-
 Date: 29Oct2012
 
 Tasks
-
 1. Build and display a complete Huffman Tree
-
 2. Encode 'tea' and display the resulting bits
-
 3. Decode the bits associated with 'tea' and print the resulting string
 
 Computing requirements:
-
 Language: Java
-
 Platform: Linux
-
 Submission requirements: Tested on UNCG's linux server. One file h_rybacki_prj.java
-
 ***************************************************/
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-public class h_rybacki_prj {
+public class huffmanproject {
 
     public static class HuffNode implements Comparable<HuffNode> {
         // fields
